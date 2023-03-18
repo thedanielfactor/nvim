@@ -24,6 +24,7 @@ plugins.lsp = {
     { "j-hui/fidget.nvim", after = { "nvim-lspconfig" } },
     { "kosayoda/nvim-lightbulb", after = { "nvim-lspconfig" } },
     { "jose-elias-alvarez/null-ls.nvim", after = { "nvim-lspconfig" } },
+    { "folke/trouble.nvim", after = { "nvim-web-devicons"} },
 }
 
 plugins.complete = {
@@ -45,6 +46,7 @@ plugins.dap = {
     { "theHamsta/nvim-dap-virtual-text", after = { "nvim-dap" } },
     { "rcarriga/nvim-dap-ui", after = { "nvim-dap" } },
 }
+
 plugins.editor = {
     { "mrjones2014/nvim-ts-rainbow" },
     { "AndrewRadev/switch.vim" },
@@ -91,6 +93,7 @@ plugins.tools = {
     { "lewis6991/gitsigns.nvim", event = { "BufRead", "BufNewFile" } },
     { "dstein64/vim-startuptime", cmd = { "StartupTime" } },
     { "folke/which-key.nvim", event = { "BufRead", "BufNewFile" } },
+    { "mickael-menu/zk-nvim", module = "zk" },
 }
 
 plugins.views = {

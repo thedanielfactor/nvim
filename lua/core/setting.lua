@@ -2,6 +2,7 @@ local setting = {}
 
 setting.g = {
     mapleader = " ",
+    editorconfig = true,
 }
 
 setting.opt = {
