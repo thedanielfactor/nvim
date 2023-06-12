@@ -18,9 +18,12 @@ end
 
 function M.load()
     M.luasnip.setup({
-        history = false,
-        update_events = "TextChanged,TextChangedI",
-        delete_check_events = "TextChanged",
+        history = true,
+        region_check_events = "InsertEnter",
+        delete_check_events = "TextChanged,InsertLeave",
+        update_events = "TextChanged,TextChangedI,InsertLeave",
+        enable_autosnippets = true,
+        store_selection_keys = "<Tab>",
     })
 
     M.luasnip_loaders_from_vscode.lazy_load({

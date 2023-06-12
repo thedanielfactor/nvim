@@ -1,4 +1,4 @@
--- https://github.com/norcalli/nvim-colorizer.lua
+-- https://github.com/NvChad/nvim-colorizer.lua
 
 local M = {
     requires = {
@@ -9,7 +9,15 @@ local M = {
 function M.before() end
 
 function M.load()
-    M.colorizer.setup()
+    M.colorizer.setup({
+        filetypes = { "*" },
+        user_default_options = {
+            css = true,
+            -- foreground, background,  virtualtext
+            mode = "background",
+            virtualtext = "■■■",
+        },
+    })
 end
 
 function M.after() end

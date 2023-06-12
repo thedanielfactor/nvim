@@ -8,6 +8,7 @@ M.opt = {
     ruler = false,
     showmode = false,
     swapfile = false,
+    cmdheight = 0,
     signcolumn = "yes:1",
     completeopt = "menuone,noselect",
     pumheight = 10,
@@ -18,6 +19,7 @@ M.opt = {
     numberwidth = 2,
     number = true,
     relativenumber = true,
+    splitright = true,
     scrolloff = 21,
     mouse = "a",
     list = true,
@@ -43,6 +45,8 @@ M.opt = {
 -- vim.opt.listchars:append("space:⋅")
 -- vim.opt.listchars:append("eol:↴")
 -- vim.opt.listchars:append("tab:↹ ")
+
+vim.opt.diffopt:append("vertical")
 vim.opt.shortmess:append("sI")
 vim.opt.whichwrap:append("<>[]hl")
 
@@ -50,31 +54,6 @@ for prefix, tbl in pairs(M) do
     for key, value in pairs(tbl) do
         vim[prefix][key] = value
     end
-end
-
-local disable_builtin_plugins = {
-    -- "netrw",
-    -- "netrwPlugin",
-    "netrwSettings",
-    "netrwFileHandlers",
-    "2html_plugin",
-    "getscript",
-    "getscriptPlugin",
-    "gzip",
-    "logipat",
-    "matchit",
-    "tar",
-    "tarPlugin",
-    "rrhelper",
-    "spellfile_plugin",
-    "vimball",
-    "vimballPlugin",
-    "zip",
-    "zipPlugin",
-}
-
-for _, builtin_plugin in ipairs(disable_builtin_plugins) do
-    vim.g["loaded_" .. builtin_plugin] = 1
 end
 
 return M

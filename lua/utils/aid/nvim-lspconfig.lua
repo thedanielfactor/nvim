@@ -15,9 +15,48 @@ local M = {
         },
         configurations_dir_path = api.path.join("conf", "lsp", "expands_nvim_lspconfig"),
     },
+    lsp_replace_message_char = {
+        ["\\\\n"] = "\n",
+        ["\\_"] = "_",
+        ["\\%["] = "[",
+        ["\\%]"] = "]",
+    },
 }
 
+function M.lsp_message_filter(config)
+    local cts = ""
+
+    local contents = config.contents
+    local extra_line = config.extra_line
+
+    -- signatures
+    if type(contents) == "string" then
+        cts = string.gsub(contents or "", "&nbsp;", " ")
+
+    -- hover
+    else
+        cts = string.gsub((contents or {}).value or "", "&nbsp;", " ")
+    end
+
+    for before_char, after_char in pairs(M.lsp_replace_message_char) do
+        cts = cts:gsub(before_char, after_char)
+    end
+
+    if not extra_line then
+        return cts
+    end
+
+    return ("---\n%s\n---"):format(cts)
+end
+
 function M.lsp_hover(_, result, ctx, config)
+    if result then
+        result.contents = M.lsp_message_filter({
+            contents = result.contents,
+            extra_line = true,
+        })
+    end
+
     local bufnr, winner = vim.lsp.handlers.hover(_, result, ctx, config)
 
     if bufnr and winner then
@@ -27,6 +66,22 @@ function M.lsp_hover(_, result, ctx, config)
 end
 
 function M.lsp_signature_help(_, result, ctx, config)
+    if result then
+        local documentation = result.signatures[1].documentation
+        local signatures_label = result.signatures[1].label
+
+        if documentation then
+            if documentation.value then
+                documentation.value = M.lsp_message_filter({ contents = documentation.value, extra_line = true })
+            else
+                documentation = M.lsp_message_filter({ contents = documentation, extra_line = true })
+            end
+        else
+            signatures_label = M.lsp_message_filter({ contents = signatures_label, extra_line = false })
+        end
+    end
+
+    -- vim.pretty_print(result.signatures.documentation.value)
     local bufnr, winner = vim.lsp.handlers.signature_help(_, result, ctx, config)
 
     local current_cursor_line = vim.api.nvim_win_get_cursor(0)[1]
@@ -110,12 +165,21 @@ function M.lspconfig_ui_quick_set()
     require("lspconfig.ui.windows").default_options.border = options.float_border and "double" or "none"
 end
 
-function M.get_headlers(settings)
-    return vim.tbl_deep_extend("force", M.lsp_handlers, settings.handlers or {})
+function M.get_configuration(ok, configuration)
+    return vim.tbl_deep_extend("force", {
+        ---@diagnostic disable-next-line: unused-local
+        on_init = function(client, bufnr) end,
+        ---@diagnostic disable-next-line: unused-local
+        on_attach = function(client, bufnr) end,
+    }, ok and configuration or {})
 end
 
-function M.get_capabilities()
-    return M.capabilities
+function M.get_headlers(configuration)
+    return vim.tbl_deep_extend("force", M.lsp_handlers, configuration.handlers or {})
+end
+
+function M.get_capabilities(configuration)
+    return vim.tbl_deep_extend("force", M.capabilities, configuration.capabilities or {})
 end
 
 function M.diagnostic_open_float()
@@ -150,7 +214,7 @@ function M.scroll_docs_to_up(map)
                 ---@diagnostic disable-next-line: redundant-parameter
                 local win_first_line = vim.fn.line("w0", opts.window_id)
 
-                if buffer_total_line <= window_height or cursor_line == 1 then
+                if buffer_total_line + 1 <= window_height or cursor_line == 1 then
                     vim.api.nvim_echo({ { "Can't scroll up", "MoreMsg" } }, false, {})
                     return
                 end
@@ -191,7 +255,7 @@ function M.scroll_docs_to_down(map)
                 ---@diagnostic disable-next-line: redundant-parameter
                 local window_last_line = vim.fn.line("w$", opts.window_id)
 
-                if buffer_total_line <= window_height or cursor_line == buffer_total_line then
+                if buffer_total_line + 1 <= window_height or cursor_line == buffer_total_line then
                     vim.api.nvim_echo({ { "Can't scroll down", "MoreMsg" } }, false, {})
                     return
                 end

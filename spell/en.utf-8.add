@@ -28,3 +28,17 @@ uint8/!
 #nt32
 int32/!
 RESTAPI
+#ursorLineNr
+#ursorLineNr
+CursorLineNr/!
+#ursorLine
+CursorLine/!
+colorscheme
+params/!
+params
+#ind
+find/!
+find
+Kernighan
+short
+asyncio

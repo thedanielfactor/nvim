@@ -1,11 +1,14 @@
+-- https://github.com/folke/lazy.nvim
+
 local aid_lazy = require("utils.aid.lazy")
 
 local M = {}
 
 M.theme = {
     {
-        "askfiy/starlight",
+        "askfiy/visual_studio_code",
         priority = 100,
+        cond = true,
     },
 }
 
@@ -40,22 +43,26 @@ M.lsp = {
         "folke/neodev.nvim",
         lazy = true,
     },
-    -- in nvim-lspconfig config file require nvim-navic
-    {
-        "SmiteshP/nvim-navic",
-        lazy = true,
-    },
-    {
-        "j-hui/fidget.nvim",
-        event = { "UIEnter" },
-    },
-    {
-        "kosayoda/nvim-lightbulb",
-        event = { "UIEnter" },
-    },
     {
         "jose-elias-alvarez/null-ls.nvim",
         event = { "UIEnter" },
+    },
+    {
+        "SmiteshP/nvim-navic",
+        event = { "LspAttach" },
+    },
+    {
+        "j-hui/fidget.nvim",
+        tag =  "legacy" ,
+        event = { "LspAttach" },
+    },
+    {
+        "kosayoda/nvim-lightbulb",
+        event = { "LspAttach" },
+    },
+    {
+        "askfiy/lsp_extra_dim",
+        event = { "LspAttach" },
     },
 }
 
@@ -96,11 +103,6 @@ M.dap = {
         "rcarriga/nvim-dap-ui",
         event = { "UIEnter" },
     },
-    -- neovim lua debug,
-    {
-        "jbyuki/one-small-step-for-vimkind",
-        ft = { "lua" },
-    },
     -- javascript debug,
     {
         "mxsdev/nvim-dap-vscode-js",
@@ -113,7 +115,7 @@ M.editor = {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         dependencies = {
-            { "mrjones2014/nvim-ts-rainbow" },
+            { "HiPhish/nvim-ts-rainbow2" },
             { "windwp/nvim-ts-autotag" },
             { "JoosepAlviste/nvim-ts-context-commentstring" },
             { "nvim-lua/plenary.nvim" },
@@ -219,8 +221,7 @@ M.language = {
 
 M.tools = {
     {
-        "norcalli/nvim-colorizer.lua",
-        event = { "UIEnter" },
+        "NvChad/nvim-colorizer.lua",
     },
     {
         "lewis6991/gitsigns.nvim",

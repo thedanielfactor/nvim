@@ -1,4 +1,32 @@
 {
+  "PREFIX COMMENT": {
+    "prefix": [
+      "prefix"
+    ],
+    "body": [
+      "$LINE_COMMENT author: askfiy",
+      "$LINE_COMMENT date: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE"
+    ],
+    "description": "file prefix comment"
+  },
+  "IGNORE-DIAGNOSTIC": {
+    "prefix": [
+      "dign"
+    ],
+    "body": [
+      "$LINE_COMMENT ignore-diagnostic"
+    ],
+    "description": "ignore langserver diagnostic"
+  },
+  "NOTE": {
+    "prefix": [
+      "note"
+    ],
+    "body": [
+      "$LINE_COMMENT NOTE: $1 - askify $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND -"
+    ],
+    "description": "generate todo tag"
+  },
   "TODO": {
     "prefix": [
       "todo"
@@ -19,7 +47,7 @@
   },
   "ERROR": {
     "prefix": [
-      "ERROR"
+      "error"
     ],
     "body": [
       "$LINE_COMMENT ERROR: $1 - askify $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND -"
@@ -28,7 +56,7 @@
   },
   "FIX": {
     "prefix": [
-      "FIX"
+      "fix"
     ],
     "body": [
       "$LINE_COMMENT FIX: $1 - askify $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND -"

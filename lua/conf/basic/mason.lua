@@ -16,6 +16,7 @@ function M.before()
     M.installer_tools = {
         lsp = {
             "gopls",
+            "clangd",
             "pyright",
             "css-lsp",
             "json-lsp",
@@ -32,6 +33,7 @@ function M.before()
             "delve",
             "debugpy",
             "js-debug-adapter@v1.74.1",
+            "cpptools",
         },
         linter = {
             "pylint",
@@ -40,6 +42,7 @@ function M.before()
             "shfmt",
             "autopep8",
             "prettier",
+            "clang-format",
             "sql-formatter",
             "stylua",
             "fixjson",
@@ -67,6 +70,7 @@ function M.after()
 
     for _, package_kind in pairs(M.installer_tools) do
         for _, package_name_version in pairs(package_kind) do
+            ---@diagnostic disable-next-line: missing-parameter
             local name, version = unpack(vim.split(package_name_version, "@"))
 
             if not M.mason_registry.is_installed(name) then
