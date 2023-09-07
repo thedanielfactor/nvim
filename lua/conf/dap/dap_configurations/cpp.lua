@@ -21,7 +21,7 @@ return {
                     local source_path = vim.fn.expand("%:p")
                     local execute_path = vim.fn.expand("%:p:r")
                     local command = ("gcc -fdiagnostics-color=always -g %s -o %s"):format(source_path, execute_path)
-                    vim.fn.system(command)
+                    vim.fn.jobstart(command)
                     return execute_path
                 end,
                 cwd = "${workspaceFolder}",

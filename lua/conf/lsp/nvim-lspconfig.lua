@@ -1,7 +1,6 @@
 -- https://github.com/neovim/nvim-lspconfig
 
 local api = require("utils.api")
-local aid_nvim_lsputils = require("utils.aid.nvim-lsputils")
 local aid_nvim_lspconfig = require("utils.aid.nvim-lspconfig")
 
 local M = {
@@ -14,6 +13,10 @@ local M = {
     disabled_servers = {
         -- "pyright",
         "pylance",
+    },
+    extra_servers = {
+        "pylance",
+        "rust-analyzer",
     },
     server_configurations_dir_path = api.path.join("conf", "lsp", "server_configurations"),
 }
@@ -29,11 +32,7 @@ function M.load()
     local mappings = M.mason_lspconfig.get_mappings()
 
     -- load build-in servers and expands servers
-    local servers = vim.tbl_deep_extend(
-        "force",
-        M.mason_lspconfig.get_installed_servers(),
-        aid_nvim_lspconfig.get_expands_servers()
-    )
+    local servers = vim.tbl_deep_extend("keep", M.get_extra_servers(), M.mason_lspconfig.get_installed_servers())
 
     for _, server_name in ipairs(servers) do
         if not vim.tbl_contains(M.disabled_servers, server_name) then
@@ -56,8 +55,7 @@ function M.load()
 
             configuration.on_attach = function(client, bufnr)
                 M.nvim_navic.attach(client, bufnr)
-                aid_nvim_lsputils.close_document_format(client)
-                pcall(aid_nvim_lsputils.close_semantic_tokens, client)
+                aid_nvim_lspconfig.public_after_attach(client, bufnr)
                 -- run private_on_attach
                 private_on_attach(client, bufnr)
             end
@@ -93,6 +91,13 @@ function M.register_key()
             end,
             options = { silent = true },
             description = "Format buffer",
+        },
+        {
+            mode = { "n" },
+            lhs = "<leader>cl",
+            rhs = aid_nvim_lspconfig.toggle_inlay_hint,
+            options = { silent = true },
+            description = "Toggle inlay hint",
         },
         {
             mode = { "n" },
@@ -190,6 +195,13 @@ function M.register_key()
             description = "Scroll down floating window",
         },
     })
+end
+
+function M.get_extra_servers()
+    local mappings = M.mason_lspconfig.get_mappings().mason_to_lspconfig
+    return vim.tbl_map(function(server_name)
+        return mappings[server_name] or server_name
+    end, M.extra_servers)
 end
 
 return M

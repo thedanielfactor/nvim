@@ -106,7 +106,8 @@ function M.load()
                 -- M.cmp.config.compare.sort_text,
                 M.cmp.config.compare.length,
                 M.cmp.config.compare.order,
-                -- aid_nvim_cmp.under_compare,
+                -- M.cmp.config.compare.recently_used,
+                -- M.cmp.config.compare.locality,
                 -- aid_nvim_cmp.source_compare,
                 -- aid_nvim_cmp.kind_compare,
             },
@@ -124,16 +125,20 @@ function M.load()
                 -- vim_item.menu = ("<%s>"):format(source:upper())
 
                 -- icon_prefix
-                vim_item.kind = (" %s "):format(icons[kind])
+                vim_item.kind = (" %s "):format(icons[kind] or icons["Default"])
                 vim_item.menu = ("<%s>"):format(kind)
 
                 vim_item.dup = M.duplicate_keywords[source] or 0
 
                 -- determine if it is a fixed window size
-                if M.complete_window_settings.fixed and vim.fn.mode() == "i" then
+                if
+                    M.complete_window_settings.fixed
+                    and vim.fn.mode() == "i"
+                then
                     local min_width = M.complete_window_settings.min_width
                     local max_width = M.complete_window_settings.max_width
-                    local truncated_abbr = vim.fn.strcharpart(abbr, 0, max_width)
+                    local truncated_abbr =
+                        vim.fn.strcharpart(abbr, 0, max_width)
 
                     if truncated_abbr ~= abbr then
                         vim_item.abbr = ("%s %s"):format(truncated_abbr, "…")
